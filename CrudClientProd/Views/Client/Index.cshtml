@@ -1,0 +1,59 @@
+﻿@model IEnumerable<CrudClientProd.Models.Client>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Listagem de clientes</h2>
+
+<p>
+    <a asp-action="Create">Adicionar um novo cliente</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CPF)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductId)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @CrudClientProd.Helpers.StringHelper.MaskCPF(item.CPF)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductId)
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { Id = item.Id }) |
+                @Html.ActionLink("Detalhes", "Details", new { Id = item.Id }) |
+                @Html.ActionLink("Excluir", "Delete", new { Id = item.Id })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

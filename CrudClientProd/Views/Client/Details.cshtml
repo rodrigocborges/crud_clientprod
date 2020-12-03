@@ -1,0 +1,46 @@
+﻿@model CrudClientProd.Models.Client
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Detalhes</h2>
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.CPF)
+        </dt>
+        <dd>
+            @CrudClientProd.Helpers.StringHelper.MaskCPF(Model.CPF)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ProductId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ProductId)
+        </dd>
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Editar", "Edit", new { Id = Model.Id }) |
+    <a asp-action="Index">Voltar</a>
+</div>
