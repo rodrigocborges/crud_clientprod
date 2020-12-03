@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CrudClientProd.Context;
 using CrudClientProd.Models;
+using CrudClientProd.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CrudClientProd.Controllers
@@ -11,15 +12,16 @@ namespace CrudClientProd.Controllers
     public class ClientController : Controller
     {
         private readonly AppDbContext _appDbContext;
-        public ClientController(AppDbContext appDbContext)
+        private readonly ClientService _clientService;
+        public ClientController(AppDbContext appDbContext, ClientService clientService)
         {
             _appDbContext = appDbContext;
+            _clientService = clientService;
         }
 
         public IActionResult Index()
         {
-            List<Client> clients = _appDbContext.client.ToList();
-            return View(clients);
+            return View(_clientService.List());
         }
 
         [HttpGet]
@@ -35,8 +37,7 @@ namespace CrudClientProd.Controllers
             //Verifica se todos os campos estão preenchidos
             if (ModelState.IsValid)
             {
-                _appDbContext.client.Add(client);
-                _appDbContext.SaveChanges();
+                _clientService.Create(client);
                 return RedirectToAction("Index");
             }
             return View(client);
@@ -46,10 +47,6 @@ namespace CrudClientProd.Controllers
         public IActionResult Edit(int Id)
         {
             Client client = _appDbContext.client.Find(Id);
-            if(client != null)
-            {
-
-            }
             return View(client);
         }
 
@@ -58,8 +55,7 @@ namespace CrudClientProd.Controllers
         {
             if (ModelState.IsValid)
             {
-                _appDbContext.client.Update(client);
-                _appDbContext.SaveChanges();
+                _clientService.Edit(client);
                 return RedirectToAction("Index");
             }
             else
@@ -78,21 +74,14 @@ namespace CrudClientProd.Controllers
         [HttpPost]
         public IActionResult Delete(Client client)
         {
-            Client _client = _appDbContext.client.Find(client.Id);
-            if (_client != null)
-            {
-                _appDbContext.client.Remove(_client);
-                _appDbContext.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(_client);
+            _clientService.Delete(client);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
         public IActionResult Details(int Id)
         {
-            Client client = _appDbContext.client.Find(Id);
-            return View(client);
+            return View(_clientService.Details(Id));
         }
     }
 }
