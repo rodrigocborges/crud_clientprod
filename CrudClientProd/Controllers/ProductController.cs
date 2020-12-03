@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CrudClientProd.Context;
 using CrudClientProd.Models;
+using CrudClientProd.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CrudClientProd.Controllers
@@ -11,16 +12,17 @@ namespace CrudClientProd.Controllers
     public class ProductController : Controller
     {
         private readonly AppDbContext _appDbContext;
-        
-        public ProductController(AppDbContext appDbContext)
+        private readonly ProductService _productService;
+
+        public ProductController(AppDbContext appDbContext, ProductService productService)
         {
             _appDbContext = appDbContext;
+            _productService = productService;
         }
 
         public IActionResult Index()
         {
-            List<Product> products = _appDbContext.product.ToList();
-            return View(products);
+            return View(_productService.List());
         }
 
         [HttpGet]
@@ -36,8 +38,7 @@ namespace CrudClientProd.Controllers
             //Verifica se todos os campos estão preenchidos
             if (ModelState.IsValid)
             {
-                _appDbContext.product.Add(product);
-                _appDbContext.SaveChanges();
+                _productService.Create(product);
                 return RedirectToAction("Index");
             }
             return View(product);
@@ -55,8 +56,7 @@ namespace CrudClientProd.Controllers
         {
             if (ModelState.IsValid)
             {
-                _appDbContext.product.Update(product);
-                _appDbContext.SaveChanges();
+                _productService.Edit(product);
                 return RedirectToAction("Index");
             }
             else
@@ -75,21 +75,14 @@ namespace CrudClientProd.Controllers
         [HttpPost]
         public IActionResult Delete(Product product)
         {
-            Product _product = _appDbContext.product.Find(product.Id);
-            if (_product != null)
-            {
-                _appDbContext.product.Remove(_product);
-                _appDbContext.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(_product);
+            _productService.Delete(product);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
         public IActionResult Details(int Id)
         {
-            Product product = _appDbContext.product.Find(Id);
-            return View(product);
+            return View(_productService.Details(Id));
         }
     }
 }

@@ -35,6 +35,7 @@ namespace CrudClientProd
 
             services.AddDbContext<AppDbContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<ClientService>();
+            services.AddTransient<ProductService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
